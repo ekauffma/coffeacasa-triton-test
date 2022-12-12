@@ -1,0 +1,17 @@
+name: "trained_testmodel"
+platform: "pytorch_libtorch"
+max_batch_size: 8
+input [
+  {
+    name: "x"
+    data_type: TYPE_FP32
+    dims: [ 4 ]
+  }
+]
+output [
+  {
+    name: "logits"
+    data_type: TYPE_FP32
+    dims: [ 1  ]
+  }
+]
