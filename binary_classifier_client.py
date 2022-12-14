@@ -13,18 +13,6 @@ else:
 
 def parse_model(model_metadata, model_config):
 
-    if len(model_metadata.inputs) != 1:
-        raise Exception("expecting 1 input, got {}".format(
-            len(model_metadata.inputs)))
-    if len(model_metadata.outputs) != 1:
-        raise Exception("expecting 1 output, got {}".format(
-            len(model_metadata.outputs)))
-        
-    if len(model_config.input) != 1:
-        raise Exception(
-            "expecting 1 input in model configuration, got {}".format(
-                len(model_config.input)))
-
     input_metadata = model_metadata.inputs[0]
     input_config = model_config.input[0]
     output_metadata = model_metadata.outputs[0]
@@ -47,12 +35,6 @@ def parse_model(model_metadata, model_config):
                 
     # Model input must have 1 dims
     input_batch_dim = (model_config.max_batch_size > 0)
-    expected_input_dims = 1 + (1 if input_batch_dim else 0)
-    if len(input_metadata.shape) != expected_input_dims:
-        raise Exception(
-            "expecting input to have {} dimensions, model '{}' input has {}".
-            format(expected_input_dims, model_metadata.name,
-                   len(input_metadata.shape)))
         
     n_features = input_metadata.shape[1 if input_batch_dim else 0]
     
@@ -90,8 +72,13 @@ if __name__ == '__main__':
                         '--url',
                         type=str,
                         required=False,
-                        default='localhost:8000',
-                        help='Inference server URL. Default is localhost:8000.')
+                        default='agc-triton-inference-server:8001',
+                        help='Inference server URL. Default is agc-triton-inference-server:8001.')
+    parser.add_argument('-n',
+                        '--num-batches',
+                        type=int,
+                        default=1,
+                        help='Number of batches to send to inference server.')
     parser.add_argument('test_events',
                         type=str,
                         default=None,
@@ -146,9 +133,7 @@ if __name__ == '__main__':
     
     startind = 0
     
-    num_batches = 5
-    
-    for i in range(num_batches):
+    for i in range(FLAGS.num_batches):
         data_current = data[startind:startind+FLAGS.batch_size,:]
         startind+=FLAGS.batch_size
         
