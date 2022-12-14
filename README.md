@@ -14,3 +14,5 @@ processor. Dynamic batching is used for sending inference requests. For more doc
 
 [https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/)
 [https://github.com/triton-inference-server/client](https://github.com/triton-inference-server/client)
+
+The model directory `binary_classifier/` is provided for reference as well, though this is not the copy which is loaded into the inference server. Instructions for modifying the model configuration can be found in `binary_classifier_client.ipynb`.
